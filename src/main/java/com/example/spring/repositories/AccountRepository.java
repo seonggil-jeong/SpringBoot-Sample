@@ -11,5 +11,5 @@ public interface AccountRepository extends JpaRepository<AccountEntity, String> 
 
     Optional<AccountEntity> findByNickname(String nickname);
 
-    Optional<AccountEntity> findByUserId(String userId);
+    Optional<AccountEntity> findByUserIdAndState(String userId, Integer state);
 }

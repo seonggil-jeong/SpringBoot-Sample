@@ -2,6 +2,7 @@ package com.example.spring.exceptions;
 
 import com.example.spring.exceptions.results.AccountErrorResult;
 import com.example.spring.exceptions.results.JwtErrorResult;
+import com.example.spring.exceptions.results.PostErrorResult;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,13 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         return this.makeErrorResponseEntity(exception.getErrorResult());
     }
 
+    @ExceptionHandler({PostException.class})
+    public ResponseEntity<ErrorResponse> handlePostException(final PostException exception) {
+        log.warn("PostException occur: ", exception);
+
+        return this.makeErrorResponseEntity(exception.getErrorResult());
+    }
+
 
     @ExceptionHandler({JwtException.class})
     public ResponseEntity<ErrorResponse> handleJwtException(final JwtException exception) {
@@ -42,8 +50,8 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         log.warn("Exception occur: ", exception);
 
@@ -54,6 +62,7 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * ErrorResponse 생성 Method
+     *
      * @param errorResult {HttpStatus, message}
      * @return ResponseEntity
      */
@@ -66,6 +75,12 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(errorResult.getStatus())
                 .body(new ErrorResponse(errorResult.name(), errorResult.getMessage()));
     }
+
+    private ResponseEntity<ErrorResponse> makeErrorResponseEntity(final PostErrorResult errorResult) {
+        return ResponseEntity.status(errorResult.getStatus())
+                .body(new ErrorResponse(errorResult.name(), errorResult.getMessage()));
+    }
+
 
 
     @Getter

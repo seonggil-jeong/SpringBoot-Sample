@@ -1,6 +1,6 @@
 package com.example.spring.controllers;
 
-import com.example.spring.services.AuthAccountService;
+import com.example.spring.controllers.services.AuthAccountService;
 import com.example.spring.vo.LoginRequest;
 import com.example.spring.vo.RegisterAccountRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import static com.example.spring.constants.AccountConstants.AUTHORIZATION_TOKEN_
 public class AuthController {
     private final AuthAccountService accountService;
 
-    @PostMapping("/account/login")
+    @PostMapping("/accounts/login")
     public ResponseEntity<String> userLogin(@Validated @RequestBody LoginRequest request) throws Exception {
         final String token = accountService.login(request);
         HttpHeaders headers = new HttpHeaders();
@@ -33,7 +33,7 @@ public class AuthController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("/account/join")
+    @PostMapping("/accounts/join")
     public ResponseEntity<Void> createAccount(@Validated @RequestBody RegisterAccountRequest request)
             throws Exception {
 

@@ -1,13 +1,16 @@
 package com.example.spring.services.impl;
 
 import com.example.spring.enums.RoleType;
+import com.example.spring.exceptions.AccountException;
+import com.example.spring.exceptions.results.AccountErrorResult;
 import com.example.spring.repositories.AccountRepository;
 import com.example.spring.repositories.entities.AccountEntity;
 import com.example.spring.security.JwtAuthToken;
 import com.example.spring.security.impl.JwtAuthTokenProvider;
 import com.example.spring.security.impl.PasswordAuthenticationToken;
-import com.example.spring.services.AuthAccountService;
-import com.example.spring.services.ValidateMethodService;
+import com.example.spring.controllers.services.AuthAccountService;
+import com.example.spring.services.PrivateAccountService;
+import com.example.spring.services.PrivateValidateService;
 import com.example.spring.vo.LoginRequest;
 import com.example.spring.vo.RegisterAccountRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,16 +30,45 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AuthAccountService {
+public class AccountServiceImpl implements AuthAccountService, PrivateAccountService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtAuthTokenProvider tokenProvider;
     private final AccountRepository accountRepository;
-    private final ValidateMethodService validateService;
+    private final PrivateValidateService validateService;
 
+    /**
+     * ------------------------------------- for PrivateAccountService -------------------------------------
+     */
+
+    /**
+     * getAccountEntity By userId
+     * @param userId
+     * @return AccountEntity
+     * @throws Exception Account Not Found (404)
+     */
+    @Override
+    public AccountEntity getAccountEntityById(String userId) throws Exception {
+        return accountRepository.findByUserIdAndState(userId, 1).orElseThrow(()
+        -> new AccountException(AccountErrorResult.ACCOUNT_NOT_FOUND));
+    }
+
+
+
+    /**
+     * ------------------------------------- for AuthAccountService -------------------------------------
+     */
+
+
+    /**
+     * Register Account
+     * @param request {userId, nickname, password, username}
+     *        autoSet {state : 1, role : USER, createDate : new Date}
+     * @throws Exception
+     */
     @Override
     public void registerAccount(final RegisterAccountRequest request) throws Exception {
-        validateService.canRegister(request);
+        validateService.canRegister(request); // userId, nickname are duplicated
 
         accountRepository.save(AccountEntity.builder()
                 .userId(request.getUserId())
@@ -49,6 +81,12 @@ public class AccountServiceImpl implements AuthAccountService {
 
     }
 
+    /**
+     * User Login
+     * @param request {userId, password}
+     * @return access Token
+     * @throws Exception
+     */
     @Override
     public String login(LoginRequest request) throws Exception {
         PasswordAuthenticationToken token = new PasswordAuthenticationToken(request.getUserId(), request.getPassword());
@@ -58,6 +96,11 @@ public class AccountServiceImpl implements AuthAccountService {
         return createToken((PasswordAuthenticationToken) authentication);
     }
 
+    /**
+     * create Token with PasswordAuthenticationToken
+     * @param token
+     * @return (String) token
+     */
     private String createToken(final PasswordAuthenticationToken token) {
         Date expiredDate = Date.from(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant());
         Map<String, Object> claims = new HashMap<>();

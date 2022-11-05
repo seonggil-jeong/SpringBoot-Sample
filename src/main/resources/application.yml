@@ -10,7 +10,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: user
+      database: sample
 
   ## DataBase (MySQL)
   h2:

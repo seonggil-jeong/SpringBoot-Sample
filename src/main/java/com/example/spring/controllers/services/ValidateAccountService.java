@@ -1,5 +1,9 @@
-package com.example.spring.services;
+package com.example.spring.controllers.services;
 
+
+/**
+ * use in Controller layer
+ */
 public interface ValidateAccountService {
     boolean validateUserId(String userId) throws Exception;
 

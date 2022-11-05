@@ -6,6 +6,7 @@ import com.example.spring.security.impl.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,9 +44,11 @@ public class SecurityConfig {
                 .headers().frameOptions().disable().and()
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/api-docs/**").permitAll() // Swagger
+                .antMatchers("/api/v1/accounts/login", "/api/v1/accounts/join").permitAll() // login && join
+                .antMatchers(HttpMethod.GET, "/api/v1/posts/**", "/api/v1/commands/**").permitAll()
+                .antMatchers("/api/v1/posts/**", "/api/v1/commands/**").authenticated()
+                .antMatchers("/api/v1/accounts/**").authenticated()
                 .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getRole())
-                .antMatchers("/api/v1/account/login", "/api/v1/account/join").permitAll() // login && join
-                .antMatchers("/api/v1/account/**", "/api/v1/account/**").authenticated()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
     }

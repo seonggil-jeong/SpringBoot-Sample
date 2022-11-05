@@ -59,4 +59,10 @@ public class JwtAuthTokenProvider implements AuthTokenProvider<JwtAuthToken> {
         } 
     }
 
+    public String getUserId(final String token) {
+        final JwtAuthToken authToken = this.convertAuthToken(token);
+
+        return authToken.getData().getSubject();
+    }
+
 }
