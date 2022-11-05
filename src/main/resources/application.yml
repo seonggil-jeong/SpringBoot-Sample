@@ -42,3 +42,5 @@ logging:
   level:
     org.springframework: info
 
+jwt:
+  secret: "SpringBootSampleKeySpringBootSampleKeySpringBootSampleKeySpringBootSampleKey"
