@@ -1,6 +1,6 @@
 package com.example.spring.vo;
 
-import com.example.spring.repositories.models.Comment;
+import com.example.spring.repository.model.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

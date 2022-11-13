@@ -1,11 +1,10 @@
 package com.example.spring.security.impl;
 
-import com.example.spring.exceptions.AccountException;
-import com.example.spring.exceptions.results.AccountErrorResult;
-import com.example.spring.repositories.AccountRepository;
-import com.example.spring.repositories.entities.AccountEntity;
+import com.example.spring.exception.AccountException;
+import com.example.spring.exception.result.AccountErrorResult;
+import com.example.spring.repository.AccountRepository;
+import com.example.spring.repository.entity.AccountEntity;
 import lombok.RequiredArgsConstructor;
-import org.omg.CORBA.UserException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

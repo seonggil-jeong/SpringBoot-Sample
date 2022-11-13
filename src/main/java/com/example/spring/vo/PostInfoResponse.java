@@ -1,12 +1,9 @@
 package com.example.spring.vo;
 
-import com.example.spring.repositories.entities.AccountEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
