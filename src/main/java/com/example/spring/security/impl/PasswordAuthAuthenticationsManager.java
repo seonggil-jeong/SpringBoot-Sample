@@ -2,8 +2,8 @@ package com.example.spring.security.impl;
 
 import com.example.spring.exception.AccountException;
 import com.example.spring.exception.result.AccountErrorResult;
-import com.example.spring.repository.AccountRepository;
-import com.example.spring.repository.entity.AccountEntity;
+import com.example.spring.app.repository.AccountRepository;
+import com.example.spring.app.repository.model.AccountEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

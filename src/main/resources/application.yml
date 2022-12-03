@@ -42,5 +42,11 @@ logging:
   level:
     org.springframework: info
 
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
+  api-docs:
+    path: "/api-docs"
+
 jwt:
   secret: "SpringBootSampleKeySpringBootSampleKeySpringBootSampleKeySpringBootSampleKey"

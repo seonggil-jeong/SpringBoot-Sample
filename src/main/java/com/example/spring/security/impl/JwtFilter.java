@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.example.spring.constants.AccountConstants.AUTHORIZATION_TOKEN_KEY;
+import static com.example.spring.app.constants.AccountConstants.AUTHORIZATION_TOKEN_KEY;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token.isPresent()) {
 
 
-            JwtAuthToken jwtAuthToken = tokenProvider.convertAuthToken(token.get());
+            JwtAuthToken jwtAuthToken = tokenProvider.convertAuthToken(token.get().split(" ")[1]);
 
             if (jwtAuthToken.validate()) {
                 Authentication authentication = tokenProvider.getAuthentication(jwtAuthToken);
