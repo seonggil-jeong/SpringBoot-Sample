@@ -1,6 +1,6 @@
 package com.example.spring.app.controller;
 
-import com.example.spring.app.controller.service.AuthAccountService;
+import com.example.spring.app.service.AuthAccountService;
 import com.example.spring.app.vo.LoginRequest;
 import com.example.spring.app.vo.RegisterAccountRequest;
 import io.swagger.v3.oas.annotations.Operation;

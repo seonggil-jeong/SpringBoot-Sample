@@ -1,4 +1,4 @@
-package com.example.spring.app.controller.service;
+package com.example.spring.app.service;
 
 import com.example.spring.app.repository.model.Comment;
 import com.example.spring.app.vo.CreateCommentRequest;

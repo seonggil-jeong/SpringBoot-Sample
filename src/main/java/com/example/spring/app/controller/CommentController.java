@@ -1,7 +1,7 @@
 package com.example.spring.app.controller;
 
-import com.example.spring.app.controller.service.CommentService;
 import com.example.spring.app.controller.support.ControllerSupport;
+import com.example.spring.app.service.CommentService;
 import com.example.spring.security.impl.JwtAuthTokenProvider;
 import com.example.spring.app.vo.CreateCommentRequest;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,8 +1,7 @@
 package com.example.spring.app.controller;
 
 import com.example.spring.app.controller.support.ControllerSupport;
-import com.example.spring.security.impl.JwtAuthTokenProvider;
-import com.example.spring.app.controller.service.PostService;
+import com.example.spring.app.service.PostService;
 import com.example.spring.app.vo.CreatePostRequest;
 import com.example.spring.app.vo.PostDetailResponse;
 import com.example.spring.app.vo.PostInfoResponse;

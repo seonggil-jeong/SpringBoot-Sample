@@ -1,6 +1,7 @@
 package com.example.spring.app.vo;
 
 import com.example.spring.app.repository.model.Comment;
+import com.example.spring.app.repository.model.PostEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,19 @@ public class PostDetailResponse {
     private final String createUserId;
 
     private final List<Comment> comments;
+
+    public static PostDetailResponse of(PostEntity entity, List<Comment> comments) {
+        return PostDetailResponse.builder()
+                .postSeq(entity.getPostSeq())
+                .postTitle(entity.getPostTitle())
+                .postContent(entity.getPostContent())
+                .createDate(entity.getCreateDate())
+                .comments(comments.size() > 0 ? comments : List.of(defaultComment())).build();
+    }
+
+    private static Comment defaultComment() {
+        return new Comment(
+                null, "there is no Comment", null, null, null
+        );
+    }
 }

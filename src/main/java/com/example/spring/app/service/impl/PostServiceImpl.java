@@ -1,10 +1,10 @@
 package com.example.spring.app.service.impl;
 
+import com.example.spring.app.service.PostService;
 import com.example.spring.exception.PostException;
 import com.example.spring.exception.result.PostErrorResult;
 import com.example.spring.app.repository.PostRepository;
 import com.example.spring.app.repository.model.PostEntity;
-import com.example.spring.app.controller.service.PostService;
 import com.example.spring.app.service.PrivateAccountService;
 import com.example.spring.app.service.PrivateCommentService;
 import com.example.spring.app.service.PrivatePostService;
@@ -63,22 +63,10 @@ public class PostServiceImpl implements PostService, PrivatePostService {
      */
     @Override
     public PostInfoResponse findPostList(PageRequest pageRequest) throws Exception {
-        List<PostInfoResponse.PostInfo> postInfos = new LinkedList<>(); // postInfo List
 
         final Page<PostEntity> postEntities = postRepository.findAllByOrderByCreateDateDesc(pageRequest);
 
-        postEntities.forEach(postEntity -> { // set PostInfo
-            postInfos.add(PostInfoResponse.PostInfo.builder()
-                    .postSeq(postEntity.getPostSeq())
-                    .postTitle(postEntity.getPostTitle())
-                    .createUserId(postEntity.getCreateUserId().getUserId())
-                    .createDate(postEntity.getCreateDate()).build());
-        });
-
-        return PostInfoResponse.builder()
-                .postCount(postEntities.getTotalElements()) // total posts count
-                .maxPageCount(postEntities.getTotalPages()) // total posts / size (pageCount)
-                .postInfos(postInfos).build();
+        return PostInfoResponse.of(postEntities);
     }
 
     /**
@@ -93,13 +81,7 @@ public class PostServiceImpl implements PostService, PrivatePostService {
         final PostEntity post = postRepository.findById(postSeq).orElseThrow(()
                 -> new PostException(PostErrorResult.POST_NOT_FOUND));
 
-        return PostDetailResponse.builder()
-                .postSeq(post.getPostSeq())
-                .postTitle(post.getPostTitle())
-                .postContent(post.getPostContent())
-                .createDate(post.getCreateDate())
-                .createUserId(post.getCreateUserId().getUserId())
-                .comments(commentService.findCommentByPostSeq(postSeq)).build();
+        return PostDetailResponse.of(post, commentService.findCommentByPostSeq(post.getPostSeq()));
     }
 
     /**

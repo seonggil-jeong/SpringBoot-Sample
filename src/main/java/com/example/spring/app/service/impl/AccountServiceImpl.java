@@ -1,5 +1,6 @@
 package com.example.spring.app.service.impl;
 
+import com.example.spring.app.service.AuthAccountService;
 import com.example.spring.app.service.PrivateValidateService;
 import com.example.spring.enums.RoleType;
 import com.example.spring.exception.AccountException;
@@ -9,7 +10,6 @@ import com.example.spring.app.repository.model.AccountEntity;
 import com.example.spring.security.JwtAuthToken;
 import com.example.spring.security.impl.JwtAuthTokenProvider;
 import com.example.spring.security.impl.PasswordAuthenticationToken;
-import com.example.spring.app.controller.service.AuthAccountService;
 import com.example.spring.app.service.PrivateAccountService;
 import com.example.spring.app.vo.LoginRequest;
 import com.example.spring.app.vo.RegisterAccountRequest;

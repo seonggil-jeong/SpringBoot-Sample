@@ -1,9 +1,9 @@
 package com.example.spring.app.service.impl;
 
+import com.example.spring.app.service.ValidateAccountService;
 import com.example.spring.exception.AccountException;
 import com.example.spring.exception.result.AccountErrorResult;
 import com.example.spring.app.repository.AccountRepository;
-import com.example.spring.app.controller.service.ValidateAccountService;
 import com.example.spring.app.service.PrivateValidateService;
 import com.example.spring.app.vo.RegisterAccountRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.spring.app.controller.service;
+package com.example.spring.app.service;
 
 
 /**

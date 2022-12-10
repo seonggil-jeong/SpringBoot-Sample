@@ -1,8 +1,8 @@
 package com.example.spring.app.service.impl;
 
-import com.example.spring.app.controller.service.CommentService;
 import com.example.spring.app.repository.CommentRepository;
 import com.example.spring.app.repository.model.Comment;
+import com.example.spring.app.service.CommentService;
 import com.example.spring.app.service.PrivateAccountService;
 import com.example.spring.app.service.PrivateCommentService;
 import com.example.spring.app.vo.CreateCommentRequest;
