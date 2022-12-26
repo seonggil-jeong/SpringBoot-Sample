@@ -40,6 +40,6 @@ public class SwaggerConfig {
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("SpringBoot-Sample API")
-                        .description("sample").version("v1.0.1"));
+                        .description("sample").version("v1.0.2"));
     }
 }
