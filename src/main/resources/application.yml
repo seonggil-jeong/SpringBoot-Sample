@@ -2,51 +2,8 @@ server:
   port: 10000
 
 spring:
-  application:
-    name: SpringBoot-sample
-
-  ## DataBase (MongoDB)
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: sample
-
-  ## DataBase (MySQL)
-  h2:
-    console:
-      enabled: true
-      path: /h2
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=MySQL
-    username: sa
-    password:
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    open-in-view: false
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        naming:
-          physical-strategy = org.hibernate.model.naming.PhysicalNamingStrategyStandardImpl
-    database: mysql
-    generate-ddl: true
-
-# Logging Info
-logging:
-  level:
-    org.springframework: info
-
-springdoc:
-  swagger-ui:
-    path: "/swagger-ui"
-  api-docs:
-    path: "/api-docs"
+  profiles:
+    default: local
 
 jwt:
   secret: "SpringBootSampleKeySpringBootSampleKeySpringBootSampleKeySpringBootSampleKey"
