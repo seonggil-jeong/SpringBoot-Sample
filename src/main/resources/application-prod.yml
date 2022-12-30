@@ -13,7 +13,7 @@ spring:
   ## DataBase (MongoDB)
   data:
     mongodb:
-      host: localhost
+      host: mongodb-container
       port: 27017
       database: sample
 
