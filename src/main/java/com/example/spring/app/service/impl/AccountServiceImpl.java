@@ -87,13 +87,7 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
                 .state(1).build());
 
 
-        accountEventPublisher.pushCreateUserEvent(CreateAccountEvent.builder()
-                .userName(result.getUserName())
-                .userId(result.getUserId())
-                .createAt(LocalDate.now())
-                .eventType(EventType.CREATE).build());
-
-
+        accountEventPublisher.pushCreateUserEvent(request.getUserId(), result.getUserName());
     }
 
     /**
@@ -109,16 +103,10 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String resultToken = this.createToken((PasswordAuthenticationToken) authentication);
-
         //push Login Event
-        accountEventPublisher.pushLoginUserEvent(LoginAccountEvent.builder()
-                .userId(request.getUserId())
-                .createAt(LocalDate.now())
-                .eventType(EventType.USER_LOGIN)
-                .userRole(token.getRole()).build());
+        accountEventPublisher.pushLoginUserEvent(request.getUserId(), token.getRole());
 
-        return resultToken;
+        return this.createToken((PasswordAuthenticationToken) authentication);
     }
 
     /**
