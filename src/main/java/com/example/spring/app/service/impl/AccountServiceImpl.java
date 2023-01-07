@@ -1,8 +1,12 @@
 package com.example.spring.app.service.impl;
 
+import com.example.spring.app.event.publisher.AccountEventPublisher;
 import com.example.spring.app.service.AuthAccountService;
 import com.example.spring.app.service.PrivateValidateService;
+import com.example.spring.enums.EventType;
 import com.example.spring.enums.RoleType;
+import com.example.spring.event.CreateAccountEvent;
+import com.example.spring.event.LoginAccountEvent;
 import com.example.spring.exception.AccountException;
 import com.example.spring.exception.result.AccountErrorResult;
 import com.example.spring.app.repository.AccountRepository;
@@ -21,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -36,6 +41,7 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
     private final JwtAuthTokenProvider tokenProvider;
     private final AccountRepository accountRepository;
     private final PrivateValidateService validateService;
+    private final AccountEventPublisher accountEventPublisher;
 
     /**
      * ------------------------------------- for PrivateAccountService -------------------------------------
@@ -43,6 +49,7 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
 
     /**
      * getAccountEntity By userId
+     *
      * @param userId
      * @return AccountEntity
      * @throws Exception Account Not Found (404)
@@ -50,9 +57,8 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
     @Override
     public AccountEntity getAccountEntityById(String userId) throws Exception {
         return accountRepository.findByUserIdAndState(userId, 1).orElseThrow(()
-        -> new AccountException(AccountErrorResult.ACCOUNT_NOT_FOUND));
+                -> new AccountException(AccountErrorResult.ACCOUNT_NOT_FOUND));
     }
-
 
 
     /**
@@ -62,15 +68,16 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
 
     /**
      * Register Account
+     *
      * @param request {userId, nickname, password, username}
-     *        autoSet {state : 1, role : USER, createDate : new Date}
+     *                autoSet {state : 1, role : USER, createDate : new Date}
      * @throws Exception
      */
     @Override
     public void registerAccount(final RegisterAccountRequest request) throws Exception {
         validateService.canRegister(request); // userId, nickname are duplicated
 
-        accountRepository.save(AccountEntity.builder()
+        final AccountEntity result = accountRepository.save(AccountEntity.builder()
                 .userId(request.getUserId())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nickname(request.getNickname())
@@ -79,10 +86,19 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
                 .role(RoleType.USER)
                 .state(1).build());
 
+
+        accountEventPublisher.pushCreateUserEvent(CreateAccountEvent.builder()
+                .userName(result.getUserName())
+                .userId(result.getUserId())
+                .createAt(LocalDate.now())
+                .eventType(EventType.CREATE).build());
+
+
     }
 
     /**
      * User Login
+     *
      * @param request {userId, password}
      * @return access Token
      * @throws Exception
@@ -93,11 +109,21 @@ public class AccountServiceImpl implements AuthAccountService, PrivateAccountSer
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return createToken((PasswordAuthenticationToken) authentication);
+        final String resultToken = this.createToken((PasswordAuthenticationToken) authentication);
+
+        //push Login Event
+        accountEventPublisher.pushLoginUserEvent(LoginAccountEvent.builder()
+                .userId(request.getUserId())
+                .createAt(LocalDate.now())
+                .eventType(EventType.USER_LOGIN)
+                .userRole(token.getRole()).build());
+
+        return resultToken;
     }
 
     /**
      * create Token with PasswordAuthenticationToken
+     *
      * @param token
      * @return (String) token
      */
