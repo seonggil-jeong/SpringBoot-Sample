@@ -1,9 +1,9 @@
 package com.example.spring.app.repository.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -31,7 +31,6 @@ public class PostEntity {
     @JoinColumn(name = "CREATE_USER_ID")
     @JsonIgnore
     private AccountEntity createUserId;
-
 
 
 }

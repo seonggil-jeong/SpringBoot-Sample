@@ -24,3 +24,12 @@ services:
       - "27017:27017"
     environment:
       - MONGO_INITDB_DATABASE=sample
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb-container
+    restart: always
+    ports:
+      - "3306:3306"
+    entrypoint:
+      - MARIADB_ROOT_PASSWORD=43214321

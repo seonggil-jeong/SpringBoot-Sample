@@ -3,12 +3,13 @@ package com.example.spring.app.repository.model;
 import com.example.spring.enums.RoleType;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@AllArgsConstructor
 @Entity
 @Table(name = "ACCOUNT")
 public class AccountEntity {

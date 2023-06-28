@@ -29,7 +29,7 @@ public class ValidateAccountServiceImpl implements PrivateValidateService, Valid
      */
     @Override
     public boolean validateUserId(final String userId) throws Exception {
-        return !accountRepository.findById(userId).isPresent();
+        return accountRepository.findById(userId).isEmpty();
     }
 
     /**
@@ -40,7 +40,7 @@ public class ValidateAccountServiceImpl implements PrivateValidateService, Valid
      */
     @Override
     public boolean validateNickname(final String nickname) throws Exception {
-        return ! accountRepository.findByNickname(nickname).isPresent();
+        return accountRepository.findByNickname(nickname).isEmpty();
     }
 
 

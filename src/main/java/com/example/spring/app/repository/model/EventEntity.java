@@ -3,7 +3,7 @@ package com.example.spring.app.repository.model;
 import com.example.spring.enums.EventType;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Getter

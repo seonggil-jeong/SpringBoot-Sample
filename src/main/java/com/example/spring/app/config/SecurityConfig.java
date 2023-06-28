@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,21 +38,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
         return httpSecurity
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .headers().frameOptions().disable().and()
-                .authorizeRequests()
-                .antMatchers("/test/**").permitAll()
-                .antMatchers("/swagger-ui/**", "/api-docs/**", "/h2/**").permitAll() // Swagger & DB Conn
-                .antMatchers("/api/auth/**").permitAll() // login && join
-                .antMatchers(HttpMethod.GET, "/api/posts/**", "/api/commands/**").permitAll()
-                .antMatchers("/api/posts/**", "/api/commands/**").authenticated()
-                .antMatchers("/api/accounts/**").authenticated()
-                .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getRole())
-                .anyRequest().authenticated().and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> {
+                    headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+                })
+                .authorizeHttpRequests(authorization -> {
+                    authorization.requestMatchers("/").permitAll();
+                }).build();
     }
+
 }
