@@ -1,34 +1,42 @@
 package com.example.spring.app.service.impl;
 
-import com.example.spring.app.service.PostService;
-import com.example.spring.exception.PostException;
-import com.example.spring.exception.result.PostErrorResult;
 import com.example.spring.app.repository.PostRepository;
 import com.example.spring.app.repository.model.PostEntity;
-import com.example.spring.app.service.PrivateAccountService;
-import com.example.spring.app.service.PrivateCommentService;
-import com.example.spring.app.service.PrivatePostService;
+import com.example.spring.app.service.*;
 import com.example.spring.app.vo.CreatePostRequest;
 import com.example.spring.app.vo.PostDetailResponse;
 import com.example.spring.app.vo.PostInfoResponse;
+import com.example.spring.exception.PostException;
+import com.example.spring.exception.result.PostErrorResult;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService, PrivatePostService {
+public class PostServiceImpl implements PostService, PrivatePostService, AdminPostService {
     private final PostRepository postRepository;
     private final PrivateAccountService accountService;
     private final PrivateCommentService commentService;
+
+    /**
+     * ------------------------------------- for AdminPostService -------------------------------------
+     */
+
+    @Override
+    public void deletePostByPostSeq(long postSeq) {
+
+        postRepository.delete(postRepository.findById(postSeq).orElseThrow(()
+                -> new PostException(PostErrorResult.POST_NOT_FOUND)));
+
+    }
+
 
     /**
      * ------------------------------------- for PostService -------------------------------------

@@ -1,6 +1,7 @@
 package com.example.spring.app.controller;
 
 import com.example.spring.app.controller.support.ControllerSupport;
+import com.example.spring.app.service.AdminPostService;
 import com.example.spring.app.service.PostService;
 import com.example.spring.app.vo.CreatePostRequest;
 import com.example.spring.app.vo.PostDetailResponse;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Post")
 public class PostController extends ControllerSupport {
     private final PostService postService;
+    private final AdminPostService adminPostService;
 
     @Operation(summary = "Post 등록", description = "Post 등록")
     @ApiResponses({
@@ -69,5 +72,20 @@ public class PostController extends ControllerSupport {
 
         return ResponseEntity.ok().body(postService.findPostDetail(postSeq));
 
+    }
+
+    @Operation(summary = "Post 삭제 By Admin", description = "Post 삭제 with Admin Role")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "삭제할 Post를 찾을 수 없음")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping("/posts/{postSeq}")
+    public ResponseEntity<Void> deletePostByPostSeq(
+            @PathVariable final long postSeq
+    ) throws Exception {
+        adminPostService.deletePostByPostSeq(postSeq);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
