@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.rmi.AccessException;
 import java.util.Date;
 
 @Slf4j
@@ -41,6 +42,21 @@ public class PostServiceImpl implements PostService, PrivatePostService, AdminPo
     /**
      * ------------------------------------- for PostService -------------------------------------
      */
+
+
+    @Override
+    public void deletePostByPostSeq(String userId, long postSeq) throws Exception {
+
+        final PostEntity targetPostEntity = postRepository.findById(postSeq).orElseThrow(()
+                -> new PostException(PostErrorResult.POST_NOT_FOUND));
+
+        if (!this.canAccessPost(postSeq, userId)) {
+            throw new AccessException("cannot access this Resource");
+
+        }
+
+        postRepository.delete(targetPostEntity);
+    }
 
     /**
      * CreatePost
@@ -100,5 +116,12 @@ public class PostServiceImpl implements PostService, PrivatePostService, AdminPo
     public PostEntity getPostEntityByPostSeq(long postSeq) throws Exception {
         return postRepository.findById(postSeq).orElseThrow(()
                 -> new PostException(PostErrorResult.POST_NOT_FOUND));
+    }
+
+    private boolean canAccessPost(final long postSeq, final String userId) throws Exception {
+        return postRepository.findById(postSeq).orElseThrow(()
+                        -> new PostException(PostErrorResult.POST_NOT_FOUND))
+                .getCreateUserId().getUserId().equals(userId);
+
     }
 }

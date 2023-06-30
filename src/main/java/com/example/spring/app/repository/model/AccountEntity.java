@@ -61,6 +61,11 @@ public class AccountEntity {
         posts = builder.posts;
     }
 
+    public AccountEntity deleteAccount() {
+        this.state = 0;
+        return this;
+    }
+
 
     public static final class Builder {
         private String userId;

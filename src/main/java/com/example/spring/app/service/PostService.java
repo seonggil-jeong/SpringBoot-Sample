@@ -16,5 +16,8 @@ public interface PostService {
 
     PostDetailResponse findPostDetail(long postSeq) throws Exception;
 
+    void deletePostByPostSeq(String userSeq, long postSeq) throws Exception;
+
+
 
 }

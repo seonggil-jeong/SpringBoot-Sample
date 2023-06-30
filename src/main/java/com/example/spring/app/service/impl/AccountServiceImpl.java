@@ -1,6 +1,8 @@
 package com.example.spring.app.service.impl;
 
+import com.example.spring.app.dto.AccountDto;
 import com.example.spring.app.event.publisher.AccountEventPublisher;
+import com.example.spring.app.service.AdminMangeAccountService;
 import com.example.spring.app.service.AuthAccountService;
 import com.example.spring.app.service.PrivateValidateService;
 import com.example.spring.enums.EventType;
@@ -19,6 +21,7 @@ import com.example.spring.app.vo.LoginRequest;
 import com.example.spring.app.vo.RegisterAccountRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,18 +33,40 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AuthAccountService, PrivateAccountService {
+public class AccountServiceImpl implements AuthAccountService, PrivateAccountService, AdminMangeAccountService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtAuthTokenProvider tokenProvider;
     private final AccountRepository accountRepository;
     private final PrivateValidateService validateService;
     private final AccountEventPublisher accountEventPublisher;
+
+    /**
+     * ------------------------------------- for AdminMangeAccountService -------------------------------------
+     */
+    @Override
+    public List<AccountDto> findAllAccount(PageRequest pageRequest) throws Exception {
+        return accountRepository.findAllByOrderByCreateDateDesc(pageRequest)
+                .get().map(AccountDto::ofEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAccountByAdmin(String targetUserId) throws Exception {
+        final AccountEntity targetAccount = accountRepository.findById(targetUserId).orElseThrow(()
+                -> new AccountException(AccountErrorResult.ACCOUNT_NOT_FOUND));
+
+
+        accountRepository.save(targetAccount.deleteAccount());
+    }
+
 
     /**
      * ------------------------------------- for PrivateAccountService -------------------------------------
