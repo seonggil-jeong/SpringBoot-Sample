@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestControllerAdvice
 public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,6 +25,7 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponse> handleException(final Exception exception) {
         log.warn("Exception occur: ", exception);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
                 "INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR"));
     }
@@ -80,11 +83,11 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-
     @Getter
     @RequiredArgsConstructor
     static class ErrorResponse {
         private final String code;
         private final String message;
+        private final LocalDateTime createdAt = LocalDateTime.now();
     }
 }

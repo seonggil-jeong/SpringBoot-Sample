@@ -21,6 +21,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ADMIN')")
+@RequestMapping("/api")
 public class AdminController {
     private final AdminPostService adminPostService;
     private final AdminMangeAccountService adminAccountService;

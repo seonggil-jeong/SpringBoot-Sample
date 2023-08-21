@@ -28,7 +28,7 @@ public class PostDetailResponse {
                 .postTitle(entity.getPostTitle())
                 .postContent(entity.getPostContent())
                 .createDate(entity.getCreateDate())
-                .comments(comments.size() > 0 ? comments : List.of(defaultComment())).build();
+                .comments(!comments.isEmpty() ? comments : List.of(defaultComment())).build();
     }
 
     private static Comment defaultComment() {

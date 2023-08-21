@@ -1,20 +1,19 @@
 version: "3"
 
 services:
-  spring-sample-service:
-    container_name: spring-sample-service
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-      - ME_CONFIG_MONGODB_PORT=27017
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mongodb
-    links:
-      - mongodb
+#  spring-sample-service:
+#    container_name: spring-sample-service
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
+#    environment:
+#      - ME_CONFIG_MONGODB_SERVER=mongodb
+#      - ME_CONFIG_MONGODB_PORT=27017
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mongodb
+#      - mariadb
 
   mongodb:
     image: mongo
@@ -31,5 +30,6 @@ services:
     restart: always
     ports:
       - "3306:3306"
-    entrypoint:
-      - MARIADB_ROOT_PASSWORD=43214321
+    environment:
+      - MYSQL_ROOT_PASSWORD=43214321
+      - MYSQL_DATABASE=sample
